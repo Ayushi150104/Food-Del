@@ -40,7 +40,7 @@ export const StoreContextProvider = (props) => {
       }
     }
   }
-    return totalAmount;
+    return Math.round(totalAmount * 100) / 100;
   };
 
 

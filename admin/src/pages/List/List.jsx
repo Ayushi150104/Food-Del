@@ -39,12 +39,13 @@ const removeFood=async(foodId)=>{
           <b>Action</b>
         </div>
         {list.map((item,index)=>{
+          const formattedPrice = Math.round(item.price * 100) / 100;
           return(
             <div key={index} className='list-table-format'>
               <img src={`${url}/images/`+item.image} alt="" />
               <p>{item.name}</p>
               <p>{item.category}</p>
-              <p>${item.price}</p>
+              <p>₹{formattedPrice}</p>
               <p onClick={()=>removeFood(item._id)} className='cursor'>X</p>
             </div>
           )
