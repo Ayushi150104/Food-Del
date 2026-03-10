@@ -295,8 +295,11 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
                   </p>
                 </div>
               </div>
-              <div className="text-right">
-                <span className="text-3xl font-black text-slate-900 tracking-tighter">
+              <div className="text-right flex flex-col gap-2 ">
+                <span className="bg-green-200 text-green-900 p-2 rounded-2xl text-xs h-max w-max flex items-cetner justify-center">
+                  Cash On Delivery (COD)
+                </span>
+                <span className="text-3xl font-black text-slate-900 tracking-tighter mr-1">
                   &#8377;{(getTotalCartAmount() + 2).toFixed(2)}
                 </span>
               </div>
