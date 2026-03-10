@@ -160,7 +160,7 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
           </div>
 
           {/* Total Bill Section */}
-          <div className="mt-10 pt-8 border-t border-slate-100">
+          <div className="mt-4 pt-8 border-t border-slate-100">
             <div className="flex justify-between items-end mb-8">
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
