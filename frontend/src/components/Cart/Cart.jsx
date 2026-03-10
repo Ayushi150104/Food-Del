@@ -1,16 +1,14 @@
-import React, { useContext } from 'react'
-import './Cart.css'
-import { StoreContext } from '../../context/StoreContext'
+import React, { useContext } from "react";
+import "./Cart.css";
+import { StoreContext } from "../../context/StoreContext";
 
 const Cart = () => {
-    console.log("Cart component rendered")
-  const { cartItems, food_list, removeFromCart } =
-    useContext(StoreContext)
-    console.log("Cart Items:",cartItems)
+  console.log("Cart component rendered");
+  const { cartItems, food_list, removeFromCart } = useContext(StoreContext);
+  console.log("Cart Items:", cartItems);
   return (
-    <div className='cart'>
+    <div className="cart">
       <div className="cart-items">
-
         <div className="cart-items-title">
           <p>Items</p>
           <p>Title</p>
@@ -29,24 +27,20 @@ const Cart = () => {
               <div className="cart-items-item" key={item._id}>
                 <img src={item.image} alt="" />
                 <p>{item.name}</p>
-                <p>₹{item.price}</p>
+                <p>&#8377;{item.price}</p>
                 <p>{cartItems[item._id]}</p>
-                <p>₹{item.price * cartItems[item._id]}</p>
-                <p
-                  className="cross"
-                  onClick={() => removeFromCart(item._id)}
-                >
+                <p>&#8377;{item.price * cartItems[item._id]}</p>
+                <p className="cross" onClick={() => removeFromCart(item._id)}>
                   x
                 </p>
               </div>
-            )
+            );
           }
-          return null
+          return null;
         })}
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;

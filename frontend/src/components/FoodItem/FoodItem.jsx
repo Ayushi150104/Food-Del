@@ -1,17 +1,17 @@
-import React, { useContext } from 'react'
-import './FoodItem.css'
-import { assets } from '../../assets/assets'
-import { StoreContext } from '../../context/StoreContext'
+import React, { useContext } from "react";
+import "./FoodItem.css";
+import { assets } from "../../assets/assets";
+import { StoreContext } from "../../context/StoreContext";
 
 const FoodItem = ({ _id, name, price, description, image }) => {
   const { cartItems, addToCart, removeFromCart, url } =
-    useContext(StoreContext)
+    useContext(StoreContext);
 
   return (
-    <div className='food-item'>
-      <div className='food-item-img-container'>
+    <div className="food-item">
+      <div className="food-item-img-container">
         <img
-          className='food-item-image'
+          className="food-item-image"
           src={url + "/images/" + image}
           alt=""
         />
@@ -46,10 +46,10 @@ const FoodItem = ({ _id, name, price, description, image }) => {
           <img src={assets.rating_star} alt="" />
         </div>
         <p className="food-item-desc">{description}</p>
-        <p className="food-item-price">₹ {price}</p>
+        <p className="food-item-price">&#8377; {price}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FoodItem
+export default FoodItem;

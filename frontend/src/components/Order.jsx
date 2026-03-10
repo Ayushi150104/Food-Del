@@ -168,16 +168,16 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
                 </span>
                 <div className="flex gap-4 mt-2">
                   <p className="text-xs text-slate-400 font-bold">
-                    Items: ₹{getTotalCartAmount().toFixed(2)}
+                    Items: &#8377;{getTotalCartAmount().toFixed(2)}
                   </p>
                   <p className="text-xs text-slate-400 font-bold">
-                    Tax: ₹{(getTotalCartAmount() * 0.05).toFixed(2)}
+                    Tax: &#8377;{(getTotalCartAmount() * 0.05).toFixed(2)}
                   </p>
                 </div>
               </div>
               <div className="text-right">
                 <span className="text-3xl font-black text-slate-900 tracking-tighter">
-                  ₹{(getTotalCartAmount() + 2).toFixed(2)}
+                  &#8377;{(getTotalCartAmount() + 2).toFixed(2)}
                 </span>
               </div>
             </div>
