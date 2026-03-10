@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import foodImg from "../assets/food_8.png";
-import { useMemo, useContext } from "react";
+import { useMemo, useContext, useState } from "react";
 import { StoreContext } from "../context/StoreContext";
 import { toast } from "react-toastify";
 
@@ -42,6 +42,8 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
     }, 3000);
   };
 
+  const [pop, setPop] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -61,7 +63,7 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
         }}
         exit={{ opacity: 0, y: 50, scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white shadow-2xl w-full max-w-2xl overflow-hidden max-h-max flex flex-col"
+        className="bg-white shadow-2xl w-full max-w-2xl max-h-[100vh] flex flex-col overflow-hidden"
       >
         {/* Header Section */}
         <div className="px-8 py-6 pb-4 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-3 z-20">
@@ -102,39 +104,136 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
             </div>
 
             {/* Right: Modern Equal Image Grid */}
-            <div
-              className={`grid gap-2.5 rounded-2xl overflow-hidden h-64 w-full bg-slate-50 p-2.5 border border-slate-100 
-              ${selectedItems.length === 1 ? "grid-cols-1" : selectedItems.length === 2 ? "grid-cols-2" : "grid-cols-2"}`}
-            >
-              {selectedItems
-                .slice(0, selectedItems.length > 3 ? 3 : 4)
-                .map((item, index) => (
-                  <div
-                    key={index}
-                    className={`relative rounded-xl overflow-hidden border-2 border-white shadow-sm transition-transform hover:scale-[1.02]
-                  ${selectedItems.length === 3 && index === 0 ? "col-span-2" : ""}
-                  ${selectedItems.length === 1 ? "h-full" : "h-full"}`}
-                  >
-                    <img
-                      src={url + "/images/" + item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
+            <div className="flex justify-center items-center">
+              <div
+                className={`grid gap-2.5 rounded-2xl overflow-hidden min-h-64 w-full bg-slate-50 p-2.5 border border-slate-100 
+  ${selectedItems.length > 3 ? "grid-cols-2" : "grid-cols-1"}`}
+              >
+                {/* 1. Show all items MINUS the last 5 */}
+                {selectedItems
+                  .slice(0, selectedItems.length - 5)
+                  .map((item, index) => (
+                    <div
+                      key={index}
+                      className="relative rounded-xl overflow-hidden border-2 border-white shadow-sm transition-transform hover:scale-[1.02] h-32"
+                    >
+                      <img
+                        src={url + "/images/" + item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
 
-              {selectedItems.length > 3 && (
-                <div className="rounded-xl bg-white border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400">
-                  <span className="text-xl font-black text-slate-800">
-                    +{selectedItems.length - 3}
-                  </span>
-                  <span className="text-[9px] font-bold uppercase tracking-tighter">
-                    More
-                  </span>
-                </div>
-              )}
+                {/* 2. The "More" card always represents the last 5 items */}
+                {selectedItems.length > 5 && (
+                  <div
+                    className="rounded-xl bg-white border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors h-32"
+                    onClick={() => setPop(true)}
+                  >
+                    <span className="text-xl font-black text-slate-800">
+                      +5
+                    </span>
+                    <span className="text-[9px] font-bold uppercase tracking-tighter">
+                      More
+                    </span>
+                  </div>
+                )}
+
+                {/* 3. Fallback: If 3 or fewer items exist, just show them all normally */}
+                {selectedItems.length <= 3 &&
+                  selectedItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className="relative rounded-xl overflow-hidden border-2 border-white h-48"
+                    >
+                      <img
+                        src={url + "/images/" + item.image}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
+
+          {pop && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+              {/* Backdrop for the sub-modal */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setPop(false)}
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              />
+
+              {/* Sub-modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden relative z-10 flex flex-col max-h-[80vh]"
+              >
+                {/* Mini Header */}
+                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0">
+                  <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                    All Items ({selectedItems.length})
+                  </h3>
+                  <button
+                    onClick={() => setPop(false)}
+                    className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-600"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2.5"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Grid of Items */}
+                <div className="p-6 overflow-y-auto custom-scrollbar">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {selectedItems.map((item, idx) => (
+                      <div key={idx} className="group relative">
+                        <div className="aspect-square rounded-2xl overflow-hidden border-2 border-slate-50 shadow-sm">
+                          <img
+                            src={url + "/images/" + item.image}
+                            alt={item.name}
+                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                          />
+                        </div>
+                        <div className="absolute bottom-1 right-1 bg-white/90 backdrop-blur px-2 py-0.5 rounded-lg border border-slate-100 shadow-sm">
+                          <p className="text-[10px] font-black text-slate-800">
+                            x{cartItems[item._id]}
+                          </p>
+                        </div>
+                        <p className="text-[10px] font-bold text-slate-500 mt-2 truncate px-1 uppercase tracking-tighter">
+                          {item.name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Footer hint */}
+                <div className="p-4 bg-slate-50 text-center">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Click outside to return
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          )}
 
           {/* Customer & Address: Professional Layout */}
           <div className="mt-7 flex flex-col sm:flex-row justify-between items-start gap-8 p-6 bg-slate-50/50 rounded-2xl border border-slate-100">
