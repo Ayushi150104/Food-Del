@@ -1,20 +1,21 @@
-import React,{useState}from 'react'
-import Navbar from './components/Navbar/Navbar'
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home/Home'
-import Cart from './pages/Cart/Cart'
-import PlaceOrder from './pages/PlaceOrder/PlaceOrder'
-import Footer from './components/Footer/Footer'
-import LoginPopup from './components/LoginPopup/LoginPopup'
+import React, { useState } from "react";
+import Navbar from "./components/Navbar/Navbar";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home/Home";
+import Cart from "./pages/Cart/Cart";
+import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
+import Footer from "./components/Footer/Footer";
+import LoginPopup from "./components/LoginPopup/LoginPopup";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
-
-  const [showLogin,setShowLogin]=useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   return (
     <>
-    {showLogin ? <LoginPopup setShowLogin={setShowLogin}/>:<></>} 
-      <div className='app'>
+      {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
+      <div className="app">
+        <ToastContainer position="top-right" autoClose={3000} />
         <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -24,7 +25,7 @@ const App = () => {
       </div>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
