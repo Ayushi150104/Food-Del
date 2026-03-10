@@ -3,9 +3,7 @@ import "./Cart.css";
 import { StoreContext } from "../../context/StoreContext";
 
 const Cart = () => {
-  console.log("Cart component rendered");
   const { cartItems, food_list, removeFromCart } = useContext(StoreContext);
-  console.log("Cart Items:", cartItems);
   return (
     <div className="cart">
       <div className="cart-items">

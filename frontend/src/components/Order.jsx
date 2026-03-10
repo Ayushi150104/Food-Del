@@ -34,12 +34,43 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
     return COLORS[Math.floor(Math.random() * COLORS.length)];
   }, []);
 
-  const handlePlaceOrder = (e) => {
+  const { addOrders } = useContext(StoreContext);
+
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
-    toast.success("Order placed successfully!");
-    setTimeout(() => {
-      setOpen(false);
-    }, 3000);
+
+    const orderData = {
+      products: selectedItems.map((item) => ({
+        _id: item._id,
+        name: item.name,
+        price: item.price,
+        quantity: cartItems[item._id],
+      })),
+      description: formattedDes,
+      totalAmount: Number((getTotalCartAmount() + 2).toFixed(2)), // Matches 'Number' type
+      PaymentAddress: address,
+    };
+
+    try {
+      // 2. Call the addOrders function from StoreContext
+      const result = await addOrders(orderData);
+
+      if (result.success) {
+        toast.success(`Order #${result.nativeId} placed successfully!`);
+
+        // 3. UI cleanup and redirection
+        setTimeout(() => {
+          setOpen(false);
+          // Clear local cart state if not already handled in context
+          // setCartItems({});
+        }, 2000);
+      } else {
+        toast.error(result.message || "Failed to place order");
+      }
+    } catch (error) {
+      console.error("Placement Error:", error);
+      toast.error("Network error. Please try again.");
+    }
   };
 
   const [pop, setPop] = useState(false);
@@ -109,50 +140,40 @@ const Order = ({ setOpen, fullName, email, phone, address }) => {
                 className={`grid gap-2.5 rounded-2xl overflow-hidden min-h-64 w-full bg-slate-50 p-2.5 border border-slate-100 
   ${selectedItems.length > 3 ? "grid-cols-2" : "grid-cols-1"}`}
               >
-                {/* 1. Show all items MINUS the last 5 */}
-                {selectedItems
-                  .slice(0, selectedItems.length - 5)
-                  .map((item, index) => (
-                    <div
-                      key={index}
-                      className="relative rounded-xl overflow-hidden border-2 border-white shadow-sm transition-transform hover:scale-[1.02] h-32"
-                    >
-                      <img
-                        src={url + "/images/" + item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
+                {selectedItems.length > 0 && (
+                  <>
+                    {/* Show first 4 items if overflowing, otherwise show all items up to 5 */}
+                    {selectedItems
+                      .slice(0, selectedItems.length > 5 ? 4 : 5)
+                      .map((item, index) => (
+                        <div
+                          key={index}
+                          className="relative rounded-xl overflow-hidden border-2 border-white shadow-sm transition-transform hover:scale-[1.02] h-32"
+                        >
+                          <img
+                            src={`${url}/images/${item.image}`}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
 
-                {/* 2. The "More" card always represents the last 5 items */}
-                {selectedItems.length > 5 && (
-                  <div
-                    className="rounded-xl bg-white border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors h-32"
-                    onClick={() => setPop(true)}
-                  >
-                    <span className="text-xl font-black text-slate-800">
-                      +5
-                    </span>
-                    <span className="text-[9px] font-bold uppercase tracking-tighter">
-                      More
-                    </span>
-                  </div>
+                    {/* The dynamic "More" card: only shows if total items > 5 */}
+                    {selectedItems.length > 5 && (
+                      <div
+                        className="rounded-xl bg-white border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-50 transition-colors h-32"
+                        onClick={() => setPop(true)}
+                      >
+                        <span className="text-xl font-black text-slate-800">
+                          +{selectedItems.length - 4}
+                        </span>
+                        <span className="text-[9px] font-bold uppercase tracking-tighter">
+                          More
+                        </span>
+                      </div>
+                    )}
+                  </>
                 )}
-
-                {/* 3. Fallback: If 3 or fewer items exist, just show them all normally */}
-                {selectedItems.length <= 3 &&
-                  selectedItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className="relative rounded-xl overflow-hidden border-2 border-white h-48"
-                    >
-                      <img
-                        src={url + "/images/" + item.image}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
               </div>
             </div>
           </div>
